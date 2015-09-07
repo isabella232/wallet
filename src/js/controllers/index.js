@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('indexController', function($rootScope, $scope, $log, $filter, $timeout, lodash, go, profileService, configService, isCordova, rateService, storageService, addressService, gettextCatalog, gettext, amMoment, nodeWebkit, addonManager, feeService, isChromeApp, bwsError, utilService, $state) {
+angular.module('copayApp.controllers').controller('indexController', function($rootScope, $scope, $log, $filter, $timeout, lodash, go, profileService, configService, isCordova, rateService, storageService, addressService, gettextCatalog, gettext, amMoment, nodeWebkit, addonManager, feeService, isChromeApp, bwsError, utilService) {
   var self = this;
   self.isCordova = isCordova;
   self.onGoingProcess = {};
@@ -144,19 +144,6 @@ angular.module('copayApp.controllers').controller('indexController', function($r
 
   self.setTab = function(tab, reset, tries) {
     tries = tries || 0;
-
-    // check if the whole menu item passed
-    if (typeof tab == 'object') {
-      if (tab.open) {
-        if (tab.link) {
-          self.tab = tab.link;
-        }
-        tab.open();
-        return;
-      } else {
-        return self.setTab(tab.link);
-      }
-    }
     if (self.tab === tab && !reset)
       return;
 
@@ -166,30 +153,27 @@ angular.module('copayApp.controllers').controller('indexController', function($r
       }, 300);
     }
 
-    if (!self.tab || !$state.is('walletHome'))
+    if (!self.tab)
       self.tab = 'walletHome';
 
-    go.path('walletHome', function() {
-
-      if (document.getElementById(self.tab)) {
-        document.getElementById(self.tab).className = 'tab-out tab-view ' + self.tab;
-        var old = document.getElementById('menu-' + self.tab);
-        if (old) {
-          old.className = '';
-        }
+    if (document.getElementById(self.tab)) {
+      document.getElementById(self.tab).className = 'tab-out tab-view ' + self.tab;
+      var old = document.getElementById('menu-' + self.tab);
+      if (old) {
+        old.className = '';
       }
+    }
 
-      if (document.getElementById(tab)) {
-        document.getElementById(tab).className = 'tab-in  tab-view ' + tab;
-        var newe = document.getElementById('menu-' + tab);
-        if (newe) {
-          newe.className = 'active';
-        }
+    if (document.getElementById(tab)) {
+      document.getElementById(tab).className = 'tab-in  tab-view ' + tab;
+      var newe = document.getElementById('menu-' + tab);
+      if (newe) {
+        newe.className = 'active';
       }
+    }
 
-      self.tab = tab;
-      $rootScope.$emit('Local/TabChanged', tab);
-    });
+    self.tab = tab;
+    $rootScope.$emit('Local/TabChanged', tab);
   };
 
 
